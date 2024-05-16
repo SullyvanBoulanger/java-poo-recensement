@@ -1,6 +1,7 @@
 package fr.diginamic.recensement.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import fr.diginamic.recensement.entites.Recensement;
@@ -15,10 +16,16 @@ import fr.diginamic.recensement.entites.Ville;
 public class RecherchePopulationRegionService extends MenuService {
 
 	@Override
-	public void traiter(Recensement rec, Scanner scanner) {
+	public void traiter(Recensement rec, Scanner scanner) throws NoSuchElementException {
 
 		System.out.println("Quel est le nom (ou le début de nom) de la région recherchée ? ");
 		String choix = scanner.nextLine();
+		validateConditionExists(ville -> 
+			ville.getNomRegion().toLowerCase().equals(choix.toLowerCase())
+			|| ville.getCodeRegion().toLowerCase().equals(choix.toLowerCase()), 
+			rec, 
+			"Cette région n'existe pas"
+		);
 
 		List<Ville> villes = rec.getVilles();
 		int somme = 0;

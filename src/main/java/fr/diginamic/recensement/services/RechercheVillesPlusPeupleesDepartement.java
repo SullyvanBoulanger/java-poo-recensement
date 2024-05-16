@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 import fr.diginamic.recensement.entites.Recensement;
 import fr.diginamic.recensement.entites.Ville;
+import fr.diginamic.recensement.exceptions.CodeDepartementInconnuException;
+import fr.diginamic.recensement.exceptions.InputException;
 import fr.diginamic.recensement.services.comparators.EnsemblePopComparateur;
 
 /**
@@ -19,14 +21,18 @@ import fr.diginamic.recensement.services.comparators.EnsemblePopComparateur;
 public class RechercheVillesPlusPeupleesDepartement extends MenuService {
 
 	@Override
-	public void traiter(Recensement recensement, Scanner scanner) {
+	public void traiter(Recensement recensement, Scanner scanner) throws InputException, CodeDepartementInconnuException {
 
 		System.out.println("Veuillez saisir un numéro de département:");
 		String nomDept = scanner.nextLine();
+		throwIfCodeDepartementDontExist(nomDept, recensement, "Ce département n'existe pas");
 
 		System.out.println("Veuillez saisir un nombre de villes:");
 		String nbVillesStr = scanner.nextLine();
+		throwIfNotNumeric(nbVillesStr, "Doit être un nombre");
+
 		int nbVilles = Integer.parseInt(nbVillesStr);
+		throwIfNotPositive(nbVilles);
 
 		List<Ville> villesDept = new ArrayList<Ville>();
 
